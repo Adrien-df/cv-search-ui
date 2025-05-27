@@ -6,6 +6,5 @@ Une IA développée par Neo2 pour retrouver les expériences professionnelles le
 📄 Matching contextuel + génération de mémo RH  
 🌱 Frugalité intégrée : usage raisonné des ressources
 
-➡️ [Lancer l’app en ligne](https://cv-search-ui-adrien-df.streamlit.app)
 
 ![preview](.github/preview_app.png)
