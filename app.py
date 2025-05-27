@@ -142,7 +142,7 @@ if query:
                 ref = meta.get("source", "Réf. inconnue")
                 duree = meta.get("duree_mois", "Durée inconnue")
 
-                title = f"🔹 EXPERIENCE {i} : {entreprise} | {fonction} | {duree}  | {ref}| Score: {score}"
+                title = f"🔹 EXPERIENCE {i} : {entreprise} | {fonction} | Durée : {duree} mois | {ref}| Score: {score}"
                 with st.expander(title):
                     for key, value in meta.items():
                         st.markdown(f"**{key}** : {value}")
