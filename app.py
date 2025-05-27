@@ -1,7 +1,6 @@
 import streamlit as st
 import openai
 from pinecone import Pinecone
-import openai
 
 # -------------------------------
 # 🔐 Configuration API
@@ -152,7 +151,7 @@ if query:
 
         # --- 📝 Option de follow-up : rédaction d’un mémo
     st.markdown("## 📝 Mémo personnalisé")
-    st.markdown("**Voulez-vous que je rédige un mémo qui explique pourquoi Neo2 a un candidat qui a travaillé sur la requête ?**")
+    st.markdown("**Voulez-vous que je rédige un mémo commercial prêt à envoyer au client pour convaincre que nous avons les bons profils référencés chez Neo2 par rapport à la requête?**")
 
     # Boutons pour chaque expérience
     col1, col2, col3 = st.columns(3)
@@ -180,8 +179,8 @@ if query:
 
             # Placeholder du system prompt (modifiable)
             memo_system_prompt = (
-                "Tu es un agent qui va expliquer en quoi une expérience pro qu'on te fournit "
-                "est liée à une requête qu'on te fournit."
+                "Tu es un agent qui incarne un chasseur de tête. Tu as pour objectif de rédiger un mémo qui justife pourquoi une requête d'un client correspond à une expérience professionnelle choisie. On va te fournir une requête qui peut être soit un descriptif d'un profil professionnel recherché, soit le nom d'une entreprise particulière soit un type de compétence particulier. Et on va te fournir également le descriptif d'une expérience professionnelle qui, à priori, correspond à la requête. Tu dois argumentr et justifier de la pertinence du matching, tout en gardant un ton factuel et professionnel. Tu te contentes de rédiger le mémo. La réponse doit faire 200 mots maximum. Tu commences avec ce début de phrase 'Parmis nos profils référencés, nous en avons un qui correspond particulièrement bien à votre requête. En effet [...] '"
+                
             )
 
             user_input_for_memo = f"Requête : {query}\n\nExpérience :\n{experience_description.strip()}"
