@@ -85,7 +85,7 @@ with st.sidebar.expander("🌱 Frugalité"):
 
 st.markdown("## 📟 Requête")
 query = st.text_input("Formulez votre recherche :", placeholder="Ex.: 'Expérience en...'")
-mot_cle_obligatoire = st.text_input("Mot-clé obligatoire dans le descriptif :", placeholder="Ex.: EDF")
+mot_cle_obligatoire = st.text_input("(Champ facultatif) Mot-clé à retrouver obligatoirement dans le descriptif :", placeholder="Ex.: EDF")
 lancer_recherche = st.button("🔍 Lancer la recherche")
 
 if query and lancer_recherche:
