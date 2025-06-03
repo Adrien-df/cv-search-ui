@@ -56,14 +56,14 @@ with st.sidebar.expander("🤖 Qui est Léon ?"):
 with st.sidebar.expander("📘 Comment l'utiliser ?"):
     st.markdown("""
     <div style="font-size: 13px;">
-        <p><strong>Léon accepte trois types de requêtes :</strong></p>
+        <p><strong>Léon accepte trois grands types de requêtes :</strong></p>
         <ul>
             <li>Le nom d'une entreprise spécifique</li>
             <li>Un type de compétence en particulier</li>
             <li>Un descriptif plus exhaustif d'un profil recherché</li>
         </ul>
         <p><strong>Plus la requête est riche</strong>, plus les résultats seront pertinents.</p>
-        <p>Léon identifie les <strong>3 expériences professionnelles</strong> les plus pertinentes et les explique.</p>
+        <p>Léon identifie les <strong>10 expériences professionnelles</strong> les plus pertinentes et explique pourquoi au moins une d'entre elles est particulièrement pertinente.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -149,10 +149,9 @@ if query and lancer_recherche:
             for i, match in enumerate(results["matches"], start=1):
                 meta = match.get("metadata", {})
                 score = round(match.get("score", 0), 3)
-                titre = f"🔹 EXPERIENCE {i} : {meta.get('entreprise', 'Inconnue')} | {meta.get('poste', 'Inconnue')} | Durée : {meta.get('duree_mois', 'Inconnue')} mois | Score: {score}"
+                titre = f"🔹 EXPERIENCE {i} : {meta.get('entreprise', 'Inconnue')} | {meta.get('poste', 'Inconnue')} | Durée : {meta.get('duree_mois', 'Inconnue')} mois | Source : {meta.get('source', 'Inconnue')} mois | Score: {score}"
                 with st.expander(titre):
-                    for key, value in meta.items():
-                        st.markdown(f"**{key}** : {value}")
+                    st.markdown(f"{meta.get('descriptif_complet', 'Inconnue')} ")
 
         except Exception as e:
             st.error(f"Erreur lors de la recherche : {e}")
