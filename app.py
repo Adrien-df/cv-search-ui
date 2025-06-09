@@ -12,8 +12,6 @@ from pinecone import Pinecone
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 pc = Pinecone(api_key=st.secrets["PINECONE_API_KEY"])
 
-index = pc.Index("neo2-dc-v1")  # remplace par le nom exact de ton index Pinecone
-
 # Initialisation de l'état pour le mémo et les résultats
 if "memo_requested" not in st.session_state:
     st.session_state.memo_requested = None
@@ -35,6 +33,26 @@ st.markdown("""
   <span style="background-color: #e0e0e0; padding: 6px 12px; border-radius: 8px; font-weight: bold; color: #333;">
     Version 1.0
   </span>
+</div>
+""", unsafe_allow_html=True)
+
+# Bandeau d'information en haut
+st.markdown("""
+<div style="
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2471a3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+">
+    <div style="display: flex; align-items: center;">
+        <span style="font-size: 16px; margin-right: 8px;">⚠️</span>
+        <div style="font-size: 13px; line-height: 1.4;">
+            <strong>Note pour les premiers utilisateurs :</strong> il s'agit d'une première version qui est limitée dans plusieurs aspects. La requête en peut être faite que sur 5000 DC max. (env. 20% de la base de DC); les profils après mai 2025 ne s'y retrouvent pas; le matching peut parfois être mauvais. L'objectif est que vous, utilisateurs finaux, puissiez tester et faire des premiers retours. Ainsi, on pourra valider si l'outil est pertinent pour les argumentaires commerciaux, ou si la plus-value est limitée. Vous pouvez faire vos retours dans ce <a href="https://docs.google.com/forms/d/e/1FAIpQLSd7oG1y-Xh_-_tS4K20qCC85l7Ia2tbNZ7Q_p-6gpcGndM-Vg/viewform?usp=dialog" target="_blank" style="color: #fff; text-decoration: underline;">formulaire anonyme</a>.
+        </div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -83,6 +101,17 @@ with st.sidebar.expander("🌱 Frugalité"):
 # 🌟 Interface principale
 # -------------------------------
 
+
+
+# Sélection de la base de données
+st.markdown("### 🗂️ Choix de la base de données DC")
+database_choice = st.radio(
+    "Sélectionnez la base de données à utiliser :",
+    ("2500 DC les + récents", "5000 DC"),
+    help="Choisissez entre la base restreinte aux profils les plus récents ou une base avec plus d'expériences mais ne comportant que les dossiers commençant par A, B ou C"
+)
+
+
 st.markdown("## 📟 Requête")
 query = st.text_input("Formulez votre recherche :", placeholder="Ex.: 'Expérience en...'")
 mot_cle_obligatoire = st.text_input("(Champ facultatif) Mot-clé à retrouver obligatoirement dans le descriptif :", placeholder="Ex.: EDF")
@@ -95,11 +124,19 @@ if query and lancer_recherche:
     
     with st.spinner("Recherche en cours..."):
         try:
+            # Configuration de l'index et namespace selon le choix
+            if database_choice == "5000 DC":
+                index = pc.Index("neo2-dc-v1")
+                namespace = "V1"
+            else:  # "2500 DC les + récents"
+                index = pc.Index("neo2-dc-v2")
+                namespace = "2000_recents_avec_synthese_V2"
+            
             response = openai.embeddings.create(input=query, model="text-embedding-3-small")
             vector = response.data[0].embedding
 
             brut_results = index.query(
-                vector=vector, top_k=10, include_metadata=True, namespace="V1"
+                vector=vector, top_k=10, include_metadata=True, namespace=namespace
             )
 
             matches_filtrés = [
